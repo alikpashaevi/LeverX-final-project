@@ -1,3 +1,11 @@
 spring:
   application:
     name: LeverX-final-project
+  datasource:
+    url: ${LEVERX_FINAL_PROJECT_DB_URL}
+    username: ${LEVERX_FINAL_PROJECT_USER}
+    password: ${LEVERX_FINAL_PROJECT_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
