@@ -10,3 +10,5 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+jwt:
+  secret-key: ${JAVA_COURSE_JWT_KEY}
