@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/auth/login")
 //@RequiredArgsConstructor
 public class LoginController {
 
@@ -17,7 +17,7 @@ public class LoginController {
     }
 
 
-    @GetMapping("/login")
+    @GetMapping
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(loginService.login(loginRequest));
     }
