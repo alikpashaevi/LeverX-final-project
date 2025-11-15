@@ -14,7 +14,7 @@ public class EmailService {
     }
 
     public void sendConfirmationEmail(String toEmail, String confirmationToken) {
-        String confirmationUrl = "http://localhost:8080/confirm-email?token=" + confirmationToken;
+        String confirmationUrl = "http://localhost:8080/auth/confirm-email?token=" + confirmationToken;
         String subject = "Confirm Your Email";
         String body = "Please click the link below to confirm your email address:\n" + confirmationUrl +
                 "\nThis link will expire in 24 hours.";

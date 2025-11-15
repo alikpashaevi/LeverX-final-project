@@ -33,6 +33,7 @@ public class JwtService {
             SignedJWT signedJWT = new SignedJWT(header, claims);
             signedJWT.sign(new MACSigner(secretKey.getBytes()));
 
+            System.out.println(signedJWT.getJWTClaimsSet().toString());
             return new LoginResponse(signedJWT.serialize());
         } catch (Exception e) {
             // TODO: replace with custom exception

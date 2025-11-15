@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth/register")
+@RequestMapping("/auth")
 public class RegisterController {
 
     private final RegisterService registerService;
@@ -14,7 +14,7 @@ public class RegisterController {
         this.registerService = registerService;
     }
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody @Valid RegisterRequest registerRequest) {
         registerService.register(registerRequest);
         return ResponseEntity.ok().build();

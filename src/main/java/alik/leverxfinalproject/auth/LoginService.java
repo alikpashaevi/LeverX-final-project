@@ -22,10 +22,8 @@ public class LoginService {
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
-        System.out.println(loginRequest.getEmail());
-        System.out.println(loginRequest.getPassword());
         AppUser appUser = userService.getUserByEmail(loginRequest.getEmail());
-        System.out.println(appUser);
+
         if (passwordEncoder.matches(loginRequest.getPassword(), appUser.getPassword())) {
             return jwtService.generateLoginResponse(appUser);
         }

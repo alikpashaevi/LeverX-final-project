@@ -60,7 +60,7 @@ public class RegisterService {
         }
 
         AppUser user = userRepo.findByEmail(email);
-        user.setVerified(true);
+        user.setEmailVerified(true);
         userRepo.save(user);
         emailVerificationService.deleteToken(token);
     }

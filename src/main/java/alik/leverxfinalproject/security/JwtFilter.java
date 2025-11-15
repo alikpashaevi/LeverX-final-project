@@ -61,10 +61,12 @@ public class JwtFilter extends OncePerRequestFilter {
                             roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                                     .collect(Collectors.toList()));
 
+            System.out.println(authenticationToken.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }catch (Exception e) {
             logger.error("Error during jwt extraction");
         }
+        chain.doFilter(request, response);
     }
 
 }

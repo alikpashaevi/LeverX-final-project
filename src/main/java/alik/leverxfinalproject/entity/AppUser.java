@@ -38,6 +38,10 @@ public class AppUser {
     )
     private Set<Role> roles = new HashSet<>();
 
+
+    @Column(name = "is_email_verified", nullable = false)
+    private boolean isEmailVerified = false;
+
     @Column(name = "is_verified", nullable = false)
     private boolean isVerified = false;
 
@@ -90,6 +94,14 @@ public class AppUser {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public boolean isEmailVerified() {
+        return isEmailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        isEmailVerified = emailVerified;
     }
 
     public boolean isVerified() {
