@@ -24,11 +24,11 @@ public class LoginService {
     public LoginResponse login(LoginRequest loginRequest) {
         AppUser appUser = userService.getUserByEmail(loginRequest.getEmail());
 
-        if (passwordEncoder.matches(loginRequest.getPassword(), appUser.getPassword())) {
+        if (passwordEncoder.matches(loginRequest.getPassword(), appUser.getPassword()) && appUser.isVerified() && appUser.isEmailVerified()) {
             return jwtService.generateLoginResponse(appUser);
         }
         // TODO: replace with custom exception
-        throw new RuntimeException("Invalid email or password");
+        throw new RuntimeException("Error during login");
     }
 
 }

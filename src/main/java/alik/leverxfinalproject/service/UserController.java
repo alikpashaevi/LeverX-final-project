@@ -34,7 +34,7 @@ public class UserController {
 
     @PreAuthorize(ADMIN)
     @PutMapping("/verify")
-    public ResponseEntity<Void> verifyUser(String email) {
+    public ResponseEntity<Void> verifyUser(@RequestParam String email) {
         AppUser user = userService.getUserByEmail(email);
         userService.verifyUser(user);
         return ResponseEntity.ok().build();

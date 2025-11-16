@@ -19,7 +19,7 @@ public class EmailVerificationService {
     public void saveConfirmationToken(String token, String email) {
         String key = "email_verification:" + token;
         ValueOperations<String, Object> ops = redisTemplate.opsForValue();
-        ops.set(key, email);
+        ops.set(key, email, EXPIRATION);
     }
 
     public String getEmailByToken(String token) {
