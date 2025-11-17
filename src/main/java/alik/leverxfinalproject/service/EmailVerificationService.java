@@ -37,6 +37,23 @@ public class EmailVerificationService {
         return getEmailByToken(token) != null;
     }
 
+    public void savePasswordResetCode(String code, String email) {
+        String key = "password_reset:" + code;
+        ValueOperations<String, Object> ops = redisTemplate.opsForValue();
+        ops.set(key, email, EXPIRATION);
+    }
+
+    public String getEmailByResetCode(String code) {
+        String key = "password_reset:" + code;
+        ValueOperations<String, Object> ops = redisTemplate.opsForValue();
+        return (String) ops.get(key);
+    }
+
+    public void deleteResetCode(String code) {
+        String key = "password_reset:" + code;
+        redisTemplate.delete(key);
+    }
+
 
 
 }

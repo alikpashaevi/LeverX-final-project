@@ -23,7 +23,19 @@ public class EmailService {
         message.setTo(toEmail);
         message.setSubject(subject);
         message.setText(body);
-        message.setFrom("noreply@yourapp.com");
+
+        mailSender.send(message);
+    }
+
+    public void sendPasswordResetEmail(String toEmail, String resetCode) {
+        String subject = "Password Reset Request";
+        String body = "You have requested to reset your password. Here is your confirmation code to reset your password:\n" + resetCode +
+                "\nThis link will expire in 24 hours.";
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(toEmail);
+        message.setSubject(subject);
+        message.setText(body);
 
         mailSender.send(message);
     }

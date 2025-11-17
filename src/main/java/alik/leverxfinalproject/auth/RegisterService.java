@@ -52,6 +52,20 @@ public class RegisterService {
 
     }
 
+    public void resendConfirmationEmail(String email) {
+        AppUser user = userRepo.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("User with email not found");
+        }
+        if (user.isEmailVerified()) {
+            throw new RuntimeException("Email is already verified");
+        }
+
+        String token = UUID.randomUUID().toString();
+        emailVerificationService.saveConfirmationToken(token, email);
+        emailService.sendConfirmationEmail(email, token);
+    }
+
     public void confirmEmail(String token) {
         String email = emailVerificationService.getEmailByToken(token);
 
@@ -63,6 +77,30 @@ public class RegisterService {
         user.setEmailVerified(true);
         userRepo.save(user);
         emailVerificationService.deleteToken(token);
+    }
+
+    public void sendPasswordResetEmail(String email) {
+
+        int resetCode = (int) (Math.random() * 900000) + 100000;
+        String resetCodeStr = String.valueOf(resetCode);
+        System.out.println("Generated reset code: " + resetCodeStr);
+        System.out.println("Sending password reset email to: " + email);
+
+        emailVerificationService.savePasswordResetCode(resetCodeStr, email);
+        emailService.sendPasswordResetEmail(email, resetCodeStr);
+
+    }
+
+    public void checkCodeAndResetPassword(String code, String newPassword) {
+        String email = emailVerificationService.getEmailByResetCode(code);
+
+        if (email == null) {
+            throw new RuntimeException("Invalid reset code");
+        }
+
+        AppUser user = userRepo.getAppUserByEmail(email);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepo.save(user);
     }
 
 }

@@ -19,6 +19,7 @@ public class UserService {
 
     public UserService(AppUserRepo appUserRepo) {
         this.appUserRepo = appUserRepo;
+
     }
 
     public AppUser getUserByEmail(String email) {
@@ -34,5 +35,7 @@ public class UserService {
         user.setVerified(true);
         appUserRepo.save(user);
     }
+
+
 
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static alik.leverxfinalproject.constants.AuthorizationConstants.ADMIN;
+import static alik.leverxfinalproject.constants.AuthorizationConstants.SELLER_OR_ADMIN;
 
 @RestController
 @RequestMapping("/users")
@@ -39,5 +40,7 @@ public class UserController {
         userService.verifyUser(user);
         return ResponseEntity.ok().build();
     }
+
+
 
 }

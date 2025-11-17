@@ -20,10 +20,30 @@ public class RegisterController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/confirm-email")
-    public ResponseEntity<String> confirmEmail(@RequestParam("token") String token) {
-        registerService.confirmEmail(token);
-        return ResponseEntity.ok("Email confirmed successfully.");
+    @PostMapping("/resend_confirmation")
+    public ResponseEntity<Void> resendConfirmationEmail(@RequestParam("email") String email) {
+        registerService.resendConfirmationEmail(email);
+        return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/confirm_email")
+    public ResponseEntity<Void> confirmEmail(@RequestParam("token") String token) {
+        registerService.confirmEmail(token);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/forgot_password")
+    public ResponseEntity<Void> forgotPassword(@RequestParam("email") String email) {
+        registerService.sendPasswordResetEmail(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/reset_password")
+    public ResponseEntity<Void> resetPassword(@RequestParam("code") String code,
+                                              @RequestParam("new_password") String newPassword) {
+        registerService.checkCodeAndResetPassword(code, newPassword);
+        return ResponseEntity.ok().build();
+    }
+
 
 }
