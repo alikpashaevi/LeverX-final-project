@@ -29,6 +29,7 @@ public class RegisterController {
     @GetMapping("/confirm_email")
     public ResponseEntity<Void> confirmEmail(@RequestParam("token") String token) {
         registerService.confirmEmail(token);
+        System.out.println("Email confirmed for token: " + token);
         return ResponseEntity.ok().build();
     }
 
@@ -44,6 +45,5 @@ public class RegisterController {
         registerService.checkCodeAndResetPassword(code, newPassword);
         return ResponseEntity.ok().build();
     }
-
 
 }
