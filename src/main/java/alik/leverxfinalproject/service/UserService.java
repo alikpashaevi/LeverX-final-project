@@ -22,6 +22,10 @@ public class UserService {
 
     }
 
+    public AppUser getUser(long id) {
+        return appUserRepo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
     public AppUser getUserByEmail(String email) {
         return appUserRepo.getAppUserByEmail(email);
     }
@@ -35,7 +39,5 @@ public class UserService {
         user.setVerified(true);
         appUserRepo.save(user);
     }
-
-
 
 }

@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -38,22 +40,22 @@ public class AppUser {
     )
     private Set<Role> roles = new HashSet<>();
 
-
     @Column(name = "is_email_verified", nullable = false)
     private boolean isEmailVerified = false;
 
     @Column(name = "is_verified", nullable = false)
     private boolean isVerified = false;
 
+
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GameObject> gameObjects = new ArrayList<>();
+
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getFirstName() {
@@ -110,13 +112,5 @@ public class AppUser {
 
     public void setVerified(boolean verified) {
         isVerified = verified;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }

@@ -23,7 +23,7 @@ public class JwtService {
         System.out.println(user.getRoles());
         try {
             JWTClaimsSet claims = new JWTClaimsSet.Builder()
-                    .subject(user.getEmail())
+                    .subject(user.getId().toString())
                     .claim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()))
                     .issuer("ratingsystem.ge")
                     .expirationTime(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
