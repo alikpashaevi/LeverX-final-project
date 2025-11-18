@@ -47,12 +47,14 @@ public class AppUser {
     private boolean isVerified = false;
 
 
-
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GameObject> gameObjects = new ArrayList<>();
+
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -113,4 +115,17 @@ public class AppUser {
     public void setVerified(boolean verified) {
         isVerified = verified;
     }
+
+    public List<GameObject> getGameObjects() {
+        return gameObjects;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
 }
