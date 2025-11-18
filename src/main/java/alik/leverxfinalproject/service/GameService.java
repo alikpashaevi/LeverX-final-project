@@ -1,6 +1,7 @@
 package alik.leverxfinalproject.service;
 
 import alik.leverxfinalproject.entity.Game;
+import alik.leverxfinalproject.model.GameObjectRequest;
 import alik.leverxfinalproject.model.GameRequest;
 import alik.leverxfinalproject.repo.GameRepo;
 import org.springframework.data.domain.Page;
@@ -32,5 +33,7 @@ public class GameService {
     public Game getGame(long id) {
         return gameRepo.findById(id).orElse(null);
     }
+
+
 
 }

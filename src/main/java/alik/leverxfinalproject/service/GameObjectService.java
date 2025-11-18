@@ -40,7 +40,31 @@ public class GameObjectService {
         return gameObjectRepo.findAll(PageRequest.of(page, size));
     }
 
-    public void deleteGameObject(Long id) {
+
+    public void editGameObject(long id, GameObjectRequest request) {
+        GameObject gameObject = gameObjectRepo.findById(id).orElseThrow(() -> new RuntimeException("GameObject not found"));
+
+        long userId = GetUserIdFromToken.getUserIdFromToken();
+
+        if (gameObject.getAppUser().getId() != userId) {
+            throw new RuntimeException("You are not the creator of this game object");
+        }
+
+        gameObject.setTitle(request.getName());
+        gameObject.setText(request.getText());
+
+        gameObjectRepo.save(gameObject);
+    }
+
+    public void deleteGameObjectById(long id) {
+        GameObject gameObject = gameObjectRepo.findById(id).orElseThrow(() -> new RuntimeException("GameObject not found"));
+
+        long userId = GetUserIdFromToken.getUserIdFromToken();
+
+        if (gameObject.getAppUser().getId() != userId) {
+            throw new RuntimeException("You are not the creator of this game object");
+        }
+
         gameObjectRepo.deleteById(id);
     }
 

@@ -61,6 +61,14 @@ public class GameObject {
         this.game = game;
     }
 
+    public AppUser getAppUser() {
+        return appUser;
+    }
+
+    public void setAppUser(AppUser appUser) {
+        this.appUser = appUser;
+    }
+
 //    public Long getUserId() {
 //        return userId;
 //    }
