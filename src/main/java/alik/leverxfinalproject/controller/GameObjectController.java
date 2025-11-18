@@ -1,6 +1,7 @@
 package alik.leverxfinalproject.controller;
 
 import alik.leverxfinalproject.entity.GameObject;
+import alik.leverxfinalproject.model.GameObjectDTO;
 import alik.leverxfinalproject.model.GameObjectRequest;
 import alik.leverxfinalproject.service.GameObjectService;
 import org.springframework.data.domain.Page;
@@ -22,8 +23,8 @@ public class GameObjectController {
     }
 
     @GetMapping
-    public Page<GameObject> getGameObjects(@RequestParam (defaultValue = "0") int page,
-                                     @RequestParam(defaultValue = "10") int size) {
+    public Page<GameObjectDTO> getGameObjects(@RequestParam (defaultValue = "0") int page,
+                                              @RequestParam(defaultValue = "10") int size) {
         return gameObjectService.getAllGameObjects(page, size);
     }
 

@@ -45,8 +45,8 @@ public class GameObjectService {
         gameObjectRepo.save(gameObject);
     }
 
-    public Page<GameObject> getAllGameObjects(int page, int size) {
-        return gameObjectRepo.findAll(PageRequest.of(page, size));
+    public Page<GameObjectDTO> getAllGameObjects(int page, int size) {
+        return gameObjectRepo.findGameObjects(PageRequest.of(page, size));
     }
 
     public void editGameObject(long id, GameObjectRequest request) {

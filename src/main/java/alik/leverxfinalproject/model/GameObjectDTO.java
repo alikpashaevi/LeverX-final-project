@@ -7,12 +7,22 @@ public class GameObjectDTO {
     private Long gameId;
     private Long userId;
 
+    public GameObjectDTO(Long id, String title, String text, Long gameId, Long userId) {
+        this.id = id;
+        this.title = title;
+        this.text = text;
+        this.gameId = gameId;
+        this.userId = userId;
+    }
+
+    public GameObjectDTO() {
+    }
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {
+    public String getTitle() {
         return title;
     }
 
@@ -32,7 +42,7 @@ public class GameObjectDTO {
         this.id = id;
     }
 
-    public void setName(String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
