@@ -24,7 +24,7 @@ public class GameObject {
     private Game game;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private AppUser appUser;
 
     @Column(name = "created_at", nullable = false)
