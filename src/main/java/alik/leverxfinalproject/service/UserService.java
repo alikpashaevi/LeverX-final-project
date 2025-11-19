@@ -5,6 +5,8 @@ import alik.leverxfinalproject.entity.Comment;
 import alik.leverxfinalproject.model.CommentDTO;
 import alik.leverxfinalproject.model.CommentRequest;
 import alik.leverxfinalproject.repo.AppUserRepo;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,9 +21,11 @@ import java.util.List;
 public class UserService {
 
     private final AppUserRepo appUserRepo;
+    private final AnonymousIdService anonymousIdService;
 
-    public UserService(AppUserRepo appUserRepo) {
+    public UserService(AppUserRepo appUserRepo, AnonymousIdService anonymousIdService) {
         this.appUserRepo = appUserRepo;
+        this.anonymousIdService = anonymousIdService;
 
     }
 
@@ -43,12 +47,12 @@ public class UserService {
         appUserRepo.save(user);
     }
 
-    public void addComment(Long userId, CommentRequest request) {
+    public void addComment(Long userId, CommentRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         AppUser user = getUser(userId);
         Comment comment = new Comment();
         comment.setText(request.getText());
         comment.setAppUser(user);
-        comment.setAuthorId(request.getAuthorId());
+        comment.setAuthorId(anonymousIdService.getOrCreateAnonymousId(httpRequest, httpResponse));
 
         user.getComments().add(comment);
         appUserRepo.save(user);
@@ -66,6 +70,20 @@ public class UserService {
         }
 
         return commentToReturn;
+    }
+
+    public void deleteComment(Long commentId, Long userId, HttpServletRequest request) {
+        AppUser user = getUser(userId);
+        Comment comment = appUserRepo.findCommentEntityById(commentId, userId);
+
+        String currentAnonymousId = anonymousIdService.getCurrentAnonymousId(request);
+        if (!comment.getAuthorId().equals(currentAnonymousId)) {
+            // TODO: Create custom exception
+            throw new RuntimeException("You are not the author of this comment");
+        }
+
+        user.getComments().remove(comment);
+        appUserRepo.save(user);
     }
 
 }

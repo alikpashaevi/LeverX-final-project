@@ -20,9 +20,9 @@ public class Comment {
     private AppUser appUser;
 
     @Column(name = "author_id", nullable = false)
-    private Long authorId;
+    private String authorId;
 
-    @Column(name = "approved", nullable = false)
+    @Column(name = "is_approved", nullable = false)
     private boolean isApproved = false;
 
     @Column(name = "created_at", nullable = false)
@@ -48,11 +48,11 @@ public class Comment {
         this.appUser = appUser;
     }
 
-    public Long getAuthorId() {
+    public String getAuthorId() {
         return authorId;
     }
 
-    public void setAuthorId(Long authorId) {
+    public void setAuthorId(String authorId) {
         this.authorId = authorId;
     }
 

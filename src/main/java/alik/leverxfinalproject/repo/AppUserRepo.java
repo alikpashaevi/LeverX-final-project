@@ -49,6 +49,9 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
 """)
     CommentDTO findCommentById(@Param("id") Long id, @Param("userId") Long userId);
 
+    @Query("SELECT c FROM Comment c WHERE c.id = :id AND c.appUser.id = c.appUser.id")
+    Comment findCommentEntityById(@Param("id") Long id, @Param("userId") Long userId);
+
 //    Page<CommentDTO> findCommentsById(Long userId, Pageable pageable);
 //
 //    CommentDTO findCommentById(Long id);

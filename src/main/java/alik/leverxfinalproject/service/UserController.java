@@ -5,6 +5,8 @@ import alik.leverxfinalproject.entity.AppUser;
 import alik.leverxfinalproject.entity.Comment;
 import alik.leverxfinalproject.model.CommentDTO;
 import alik.leverxfinalproject.model.CommentRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static alik.leverxfinalproject.constants.AuthorizationConstants.ADMIN;
@@ -45,8 +48,8 @@ public class UserController {
     }
 
     @PostMapping("/{id}/comments")
-    public ResponseEntity<Void> addComment(@PathVariable Long id, @RequestBody CommentRequest request) {
-        userService.addComment(id, request);
+    public ResponseEntity<Void> addComment(@PathVariable Long id, @RequestBody CommentRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        userService.addComment(id, request, httpRequest, httpResponse);
         return ResponseEntity.ok().build();
     }
 
@@ -62,4 +65,9 @@ public class UserController {
         return userService.getComment(commentId, userId);
     }
 
+    @DeleteMapping("/{userId}/comments/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long userId, @PathVariable Long commentId, HttpServletRequest request) {
+        userService.deleteComment(commentId, userId, request);
+        return ResponseEntity.ok().build();
+    }
 }

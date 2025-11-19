@@ -6,10 +6,10 @@ public class CommentDTO {
     private Long id;
     private String text;
     private Long userId;
-    private Long authorId;
+    private String authorId;
     private LocalDateTime createdAt;
 
-    public CommentDTO(Long id, String text, Long userId, Long authorId, LocalDateTime createdAt) {
+    public CommentDTO(Long id, String text, Long userId, String authorId, LocalDateTime createdAt) {
         this.id = id;
         this.text = text;
         this.userId = userId;
@@ -29,7 +29,7 @@ public class CommentDTO {
         return userId;
     }
 
-    public Long getAuthorId() {
+    public String getAuthorId() {
         return authorId;
     }
 
