@@ -2,6 +2,9 @@ package alik.leverxfinalproject.service;
 
 import alik.leverxfinalproject.entity.AppUser;
 
+import alik.leverxfinalproject.entity.Comment;
+import alik.leverxfinalproject.model.CommentDTO;
+import alik.leverxfinalproject.model.CommentRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +44,22 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/{id}/comments")
+    public ResponseEntity<Void> addComment(@PathVariable Long id, @RequestBody CommentRequest request) {
+        userService.addComment(id, request);
+        return ResponseEntity.ok().build();
+    }
 
+    @GetMapping("/{id}/comments")
+    public Page<CommentDTO> getUserComments(@PathVariable Long id,
+                                            @RequestParam(defaultValue = "0") int page,
+                                            @RequestParam(defaultValue = "10") int size) {
+        return userService.getUserComments(id, page, size);
+    }
+
+    @GetMapping("/{userId}/comments/{commentId}")
+    public CommentDTO getComment(@PathVariable Long userId, @PathVariable Long commentId) {
+        return userService.getComment(commentId, userId);
+    }
 
 }
