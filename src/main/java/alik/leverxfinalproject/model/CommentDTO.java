@@ -8,13 +8,15 @@ public class CommentDTO {
     private Long userId;
     private String authorId;
     private LocalDateTime createdAt;
+    private boolean isApproved;
 
-    public CommentDTO(Long id, String text, Long userId, String authorId, LocalDateTime createdAt) {
+    public CommentDTO(Long id, String text, Long userId, String authorId, LocalDateTime createdAt, boolean isApproved) {
         this.id = id;
         this.text = text;
         this.userId = userId;
         this.authorId = authorId;
         this.createdAt = createdAt;
+        this.isApproved = isApproved;
     }
 
     public Long getId() {
@@ -35,5 +37,9 @@ public class CommentDTO {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public boolean isApproved() {
+        return isApproved;
     }
 }

@@ -70,4 +70,34 @@ public class UserController {
         userService.deleteComment(commentId, userId, request);
         return ResponseEntity.ok().build();
     }
+
+    @PreAuthorize(ADMIN)
+    @GetMapping("/unapproved_comments")
+    public Page<CommentDTO> getUnapprovedComments(@RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "10") int size) {
+        return userService.getUnapprovedComments(page, size);
+    }
+
+    @PreAuthorize(ADMIN)
+    @PutMapping("/unapproved_comments/approve/{userId}/comment/{commentId}")
+    public ResponseEntity<Void> approveComment(@PathVariable Long userId, @PathVariable Long commentId) {
+        userService.approveComment(commentId, userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize(ADMIN)
+    @DeleteMapping("/unapproved_comments/reject/{userId}/comment/{commentId}")
+    public ResponseEntity<Void> rejectComment(@PathVariable Long userId, @PathVariable Long commentId) {
+        userService.rejectComment(commentId, userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize(ADMIN)
+    @GetMapping("/unapproved_comments/{commentId}")
+    public CommentDTO getUnapprovedCommentById(@PathVariable Long commentId) {
+        return userService.getUnapprovedComment(commentId);
+    }
+
+
+
 }

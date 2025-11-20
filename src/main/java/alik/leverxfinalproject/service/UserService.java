@@ -86,4 +86,31 @@ public class UserService {
         appUserRepo.save(user);
     }
 
+    public Page<CommentDTO> getUnapprovedComments(int page, int size) {
+        return appUserRepo.findUnapprovedComments(PageRequest.of(page, size));
+    }
+
+    public void approveComment(Long commentId, Long userId) {
+        Comment comment = appUserRepo.findCommentEntityById(commentId, userId);
+        comment.setIsApproved(true);
+        appUserRepo.save(getUser(userId));
+    }
+
+    public CommentDTO getUnapprovedComment(Long commentId) {
+        CommentDTO commentToReturn = appUserRepo.findUnapprovedComment(commentId);
+        if (commentToReturn == null) {
+            throw new RuntimeException("Comment not found");
+        }
+
+        return commentToReturn;
+    }
+
+    public void rejectComment(Long commentId, Long userId) {
+        AppUser user = getUser(userId);
+        Comment comment = appUserRepo.findCommentEntityById(commentId, userId);
+
+        user.getComments().remove(comment);
+        appUserRepo.save(user);
+    }
+
 }
