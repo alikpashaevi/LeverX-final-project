@@ -17,8 +17,8 @@ public class LoginController {
     }
 
 
-    @GetMapping
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+    @PostMapping
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
         return ResponseEntity.ok(loginService.login(loginRequest));
     }
 

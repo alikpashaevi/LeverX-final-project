@@ -3,6 +3,7 @@ package alik.leverxfinalproject.controller;
 import alik.leverxfinalproject.entity.Game;
 import alik.leverxfinalproject.model.GameRequest;
 import alik.leverxfinalproject.service.GameService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class GameController {
 
 
     @PostMapping
-    public void addGame(@RequestBody GameRequest request) {
+    public void addGame(@RequestBody @Valid GameRequest request) {
         gameService.addGame(request);
     }
 

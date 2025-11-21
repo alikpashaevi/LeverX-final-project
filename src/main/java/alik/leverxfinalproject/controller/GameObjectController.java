@@ -4,6 +4,7 @@ import alik.leverxfinalproject.entity.GameObject;
 import alik.leverxfinalproject.model.GameObjectDTO;
 import alik.leverxfinalproject.model.GameObjectRequest;
 import alik.leverxfinalproject.service.GameObjectService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,14 +29,20 @@ public class GameObjectController {
         return gameObjectService.getAllGameObjects(page, size);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<GameObjectDTO> getGameObjectById(@PathVariable Long id) {
+        GameObjectDTO gameObjectDTO = gameObjectService.getGameObjectById(id);
+        return ResponseEntity.ok(gameObjectDTO);
+    }
+
     @PostMapping
-    public ResponseEntity<Void> CreateGameObject(@RequestBody GameObjectRequest request) {
+    public ResponseEntity<Void> CreateGameObject(@RequestBody @Valid GameObjectRequest request) {
         gameObjectService.addGameObject(request);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> editGameObject(@PathVariable long id, @RequestBody GameObjectRequest request) {
+    public ResponseEntity<Void> editGameObject(@PathVariable long id, @RequestBody @Valid GameObjectRequest request) {
         gameObjectService.editGameObject(id, request);
         return ResponseEntity.ok().build();
     }
