@@ -4,6 +4,9 @@ import alik.leverxfinalproject.components.GetUserIdFromToken;
 import alik.leverxfinalproject.constants.MapObjects;
 import alik.leverxfinalproject.entity.Game;
 import alik.leverxfinalproject.entity.GameObject;
+import alik.leverxfinalproject.error.GameNotFoundException;
+import alik.leverxfinalproject.error.GameObjectNotFoundException;
+import alik.leverxfinalproject.error.UnauthorizedActionException;
 import alik.leverxfinalproject.model.GameObjectDTO;
 import alik.leverxfinalproject.model.GameObjectRequest;
 import alik.leverxfinalproject.repo.GameObjectRepo;
@@ -25,7 +28,7 @@ public class GameObjectService {
     }
 
     public GameObjectDTO getGameObjectById(long id) {
-        GameObject gameObject = gameObjectRepo.findById(id).orElseThrow(() -> new RuntimeException("GameObject not found"));
+        GameObject gameObject = gameObjectRepo.findById(id).orElseThrow(() -> new GameObjectNotFoundException("GameObject not found"));
         return MapObjects.mapToDTO(gameObject);
     }
 
@@ -36,7 +39,7 @@ public class GameObjectService {
         gameObject.setText(request.getText());
         Game game = gameService.getGame(request.getGameId());
         if (game == null) {
-            throw new RuntimeException("Game not found, please create the game first");
+            throw new GameNotFoundException("Game not found, please create the game first");
         }
         gameObject.setGame(game);
         System.out.println("User ID from token: " + GetUserIdFromToken.getUserIdFromToken());
@@ -50,12 +53,12 @@ public class GameObjectService {
     }
 
     public void editGameObject(long id, GameObjectRequest request) {
-        GameObject gameObject = gameObjectRepo.findById(id).orElseThrow(() -> new RuntimeException("GameObject not found"));
+        GameObject gameObject = gameObjectRepo.findById(id).orElseThrow(() -> new GameObjectNotFoundException("GameObject not found"));
 
         long userId = GetUserIdFromToken.getUserIdFromToken();
 
         if (gameObject.getAppUser().getId() != userId) {
-            throw new RuntimeException("You are not the creator of this game object");
+            throw new UnauthorizedActionException("You are not the creator of this game object");
         }
 
         gameObject.setTitle(request.getName());
@@ -65,12 +68,12 @@ public class GameObjectService {
     }
 
     public void deleteGameObjectById(long id) {
-        GameObject gameObject = gameObjectRepo.findById(id).orElseThrow(() -> new RuntimeException("GameObject not found"));
+        GameObject gameObject = gameObjectRepo.findById(id).orElseThrow(() -> new GameObjectNotFoundException("GameObject not found"));
 
         long userId = GetUserIdFromToken.getUserIdFromToken();
 
         if (gameObject.getAppUser().getId() != userId) {
-            throw new RuntimeException("You are not the creator of this game object");
+            throw new UnauthorizedActionException("You are not the creator of this game object");
         }
 
         gameObjectRepo.deleteById(id);

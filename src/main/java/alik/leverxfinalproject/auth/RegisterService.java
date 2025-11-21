@@ -1,11 +1,15 @@
 package alik.leverxfinalproject.auth;
 
+import alik.leverxfinalproject.error.EmailAlreadyInUseException;
+import alik.leverxfinalproject.error.EmailAlreadyVerifiedException;
+import alik.leverxfinalproject.error.InvalidResetCodeException;
+import alik.leverxfinalproject.error.InvalidTokenException;
+import alik.leverxfinalproject.error.UserNotFoundException;
 import alik.leverxfinalproject.entity.AppUser;
 import alik.leverxfinalproject.repo.AppUserRepo;
 import alik.leverxfinalproject.repo.RoleRepo;
 import alik.leverxfinalproject.service.EmailService;
 import alik.leverxfinalproject.service.EmailVerificationService;
-import alik.leverxfinalproject.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +36,7 @@ public class RegisterService {
 
     public void register(RegisterRequest registerRequest) {
         if (userRepo.existsByEmail(registerRequest.getEmail())) {
-            // TODO: replace with custom exception
-            throw new RuntimeException("Email already in use");
+            throw new EmailAlreadyInUseException("Email already in use");
         }
         AppUser appUser = new AppUser();
         appUser.setFirstName(registerRequest.getFirstName());
@@ -55,10 +58,10 @@ public class RegisterService {
     public void resendConfirmationEmail(String email) {
         AppUser user = userRepo.findByEmail(email);
         if (user == null) {
-            throw new RuntimeException("User with email not found");
+            throw new UserNotFoundException("User with email not found");
         }
         if (user.isEmailVerified()) {
-            throw new RuntimeException("Email is already verified");
+            throw new EmailAlreadyVerifiedException("Email is already verified");
         }
 
         String token = UUID.randomUUID().toString();
@@ -70,7 +73,7 @@ public class RegisterService {
         String email = emailVerificationService.getEmailByToken(token);
 
         if (email == null) {
-            throw new RuntimeException("Invalid token");
+            throw new InvalidTokenException("Invalid token");
         }
 
         AppUser user = userRepo.findByEmail(email);
@@ -95,7 +98,7 @@ public class RegisterService {
         String email = emailVerificationService.getEmailByResetCode(code);
 
         if (email == null) {
-            throw new RuntimeException("Invalid reset code");
+            throw new InvalidResetCodeException("Invalid reset code");
         }
 
         AppUser user = userRepo.getAppUserByEmail(email);

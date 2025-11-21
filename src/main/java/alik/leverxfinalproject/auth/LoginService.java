@@ -1,9 +1,8 @@
 package alik.leverxfinalproject.auth;
 
+import alik.leverxfinalproject.error.InvalidLoginException;
 import alik.leverxfinalproject.entity.AppUser;
-import alik.leverxfinalproject.repo.AppUserRepo;
 import alik.leverxfinalproject.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +23,10 @@ public class LoginService {
     public LoginResponse login(LoginRequest loginRequest) {
         AppUser appUser = userService.getUserByEmail(loginRequest.getEmail());
 
-        if (passwordEncoder.matches(loginRequest.getPassword(), appUser.getPassword()) && appUser.isVerified() && appUser.isEmailVerified()) {
+        if (appUser != null && passwordEncoder.matches(loginRequest.getPassword(), appUser.getPassword()) && appUser.isVerified() && appUser.isEmailVerified()) {
             return jwtService.generateLoginResponse(appUser);
         }
-        // TODO: replace with custom exception
-        throw new RuntimeException("Error during login");
+        throw new InvalidLoginException("Invalid credentials or user not verified");
     }
 
 }

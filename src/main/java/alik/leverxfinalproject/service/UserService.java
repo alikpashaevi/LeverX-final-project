@@ -2,19 +2,17 @@ package alik.leverxfinalproject.service;
 
 import alik.leverxfinalproject.entity.AppUser;
 import alik.leverxfinalproject.entity.Comment;
+import alik.leverxfinalproject.error.CommentNotFoundException;
+import alik.leverxfinalproject.error.UnauthorizedActionException;
+import alik.leverxfinalproject.error.UserNotFoundException;
 import alik.leverxfinalproject.model.CommentDTO;
 import alik.leverxfinalproject.model.CommentRequest;
 import alik.leverxfinalproject.repo.AppUserRepo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 //@RequiredArgsConstructor
@@ -30,7 +28,7 @@ public class UserService {
     }
 
     public AppUser getUser(long id) {
-        return appUserRepo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        return appUserRepo.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     public AppUser getUserByEmail(String email) {
@@ -65,8 +63,7 @@ public class UserService {
     public CommentDTO getComment(Long commentId, Long userId) {
         CommentDTO commentToReturn = appUserRepo.findCommentById(commentId, userId);
         if (commentToReturn == null) {
-            // TODO: Create custom exception
-            throw new RuntimeException("Comment not found");
+            throw new CommentNotFoundException("Comment not found");
         }
 
         return commentToReturn;
@@ -78,8 +75,7 @@ public class UserService {
 
         String currentAnonymousId = anonymousIdService.getCurrentAnonymousId(request);
         if (!comment.getAuthorId().equals(currentAnonymousId)) {
-            // TODO: Create custom exception
-            throw new RuntimeException("You are not the author of this comment");
+            throw new UnauthorizedActionException("You are not the author of this comment");
         }
 
         user.getComments().remove(comment);
@@ -99,7 +95,7 @@ public class UserService {
     public CommentDTO getUnapprovedComment(Long commentId) {
         CommentDTO commentToReturn = appUserRepo.findUnapprovedComment(commentId);
         if (commentToReturn == null) {
-            throw new RuntimeException("Comment not found");
+            throw new CommentNotFoundException("Comment not found");
         }
 
         return commentToReturn;
