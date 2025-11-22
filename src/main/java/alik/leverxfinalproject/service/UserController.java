@@ -5,8 +5,10 @@ import alik.leverxfinalproject.entity.AppUser;
 import alik.leverxfinalproject.entity.Comment;
 import alik.leverxfinalproject.model.CommentDTO;
 import alik.leverxfinalproject.model.CommentRequest;
+import alik.leverxfinalproject.model.UserDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,17 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping
+    public Page<UserDTO> getUsers(@RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "10") int size) {
+        return userService.getAllUsers(page, size);
+    }
+
+    @GetMapping("/{id}")
+    public UserDTO getUserById(@PathVariable Long id) {
+        return userService.getUserDTO(id);
+    }
+
     @PreAuthorize(ADMIN)
     @GetMapping("/unverified")
     public Page<AppUser> getUnverifiedUsers(@RequestParam(defaultValue = "0") int page,
@@ -48,7 +61,7 @@ public class UserController {
     }
 
     @PostMapping("/{id}/comments")
-    public ResponseEntity<Void> addComment(@PathVariable Long id, @RequestBody CommentRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+    public ResponseEntity<Void> addComment(@PathVariable Long id, @RequestBody @Valid CommentRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         userService.addComment(id, request, httpRequest, httpResponse);
         return ResponseEntity.ok().build();
     }
@@ -66,8 +79,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}/comments/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long userId, @PathVariable Long commentId, HttpServletRequest request) {
-        userService.deleteComment(commentId, userId, request);
+    public ResponseEntity<Void> deleteComment(@PathVariable Long userId, @PathVariable Long commentId, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        userService.deleteComment(commentId, userId, httpRequest, httpResponse);
         return ResponseEntity.ok().build();
     }
 

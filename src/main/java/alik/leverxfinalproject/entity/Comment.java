@@ -15,6 +15,9 @@ public class Comment {
     @Column(name = "text", nullable = false)
     private String text;
 
+    @Column(name = "rating", nullable = false)
+    private int rating;
+
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
     private AppUser appUser;
@@ -28,6 +31,9 @@ public class Comment {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
     public Long getId() {
         return id;
     }
@@ -38,6 +44,14 @@ public class Comment {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     public AppUser getAppUser() {
