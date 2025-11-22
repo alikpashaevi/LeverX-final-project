@@ -26,6 +26,7 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
     SELECT new alik.leverxfinalproject.model.CommentDTO(
         c.id,
         c.text,
+        c.rating,
         c.appUser.id,
         c.authorId,
         c.createdAt,
@@ -41,6 +42,7 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
         SELECT new alik.leverxfinalproject.model.CommentDTO(
         c.id,
         c.text,
+        c.rating,
         c.appUser.id,
         c.authorId,
         c.createdAt,
@@ -60,6 +62,7 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
         SELECT new alik.leverxfinalproject.model.CommentDTO(
         c.id,
         c.text,
+        c.rating,
         c.appUser.id,
         c.authorId,
         c.createdAt,
@@ -74,6 +77,7 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
         SELECT new alik.leverxfinalproject.model.CommentDTO(
         c.id,
         c.text,
+        c.rating,
         c.appUser.id,
         c.authorId,
         c.createdAt,
@@ -84,6 +88,19 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
     AND c.isApproved = false
 """)
     CommentDTO findUnapprovedComment(@Param("id") Long id);
+
+    @Query("""
+    SELECT COUNT(c) > 0
+    FROM Comment c
+    WHERE c.appUser.id = :userId
+      AND c.authorId = :authorId
+""")
+    boolean authorHasCommented(@Param("userId") Long userId,
+                               @Param("authorId") String authorId);
+
+    @Query("SELECT c FROM Comment c WHERE c.authorId = :authorId AND c.appUser.id = :userId")
+    Comment findCommentByAuthorIdAndAppUserId(@Param("userId") Long userId,
+                                              @Param("authorId") String authorId);
 
 //    Page<CommentDTO> findCommentsById(Long userId, Pageable pageable);
 //

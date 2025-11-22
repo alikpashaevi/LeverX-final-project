@@ -1,5 +1,6 @@
 package alik.leverxfinalproject.service;
 
+import alik.leverxfinalproject.components.GetUserIdFromToken;
 import alik.leverxfinalproject.entity.AppUser;
 import alik.leverxfinalproject.entity.Comment;
 import alik.leverxfinalproject.error.CommentNotFoundException;
@@ -12,6 +13,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -47,8 +50,27 @@ public class UserService {
 
     public void addComment(Long userId, CommentRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         AppUser user = getUser(userId);
-        Comment comment = new Comment();
+        String authorId;
+        Comment comment;
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null &&
+                authentication.isAuthenticated() &&
+                !"anonymousUser".equals(authentication.getPrincipal())) {
+            authorId = authentication.getName();
+            System.out.println("Authenticated user: " + authorId);
+        } else {
+            authorId = anonymousIdService.getOrCreateAnonymousId(httpRequest, httpResponse);
+                    }
+
+        if (appUserRepo.authorHasCommented(userId, authorId)) {
+            comment = appUserRepo.findCommentByAuthorIdAndAppUserId(userId, authorId);
+        } else {
+            comment = new Comment();
+        }
+
         comment.setText(request.getText());
+        comment.setRating(request.getRating());
         comment.setAppUser(user);
         comment.setAuthorId(anonymousIdService.getOrCreateAnonymousId(httpRequest, httpResponse));
 
@@ -69,12 +91,13 @@ public class UserService {
         return commentToReturn;
     }
 
-    public void deleteComment(Long commentId, Long userId, HttpServletRequest request) {
+    public void deleteComment(Long commentId, Long userId, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         AppUser user = getUser(userId);
         Comment comment = appUserRepo.findCommentEntityById(commentId, userId);
 
-        String currentAnonymousId = anonymousIdService.getCurrentAnonymousId(request);
-        if (!comment.getAuthorId().equals(currentAnonymousId)) {
+        String authorId = resolveAuthorId(httpRequest, httpResponse);
+
+        if (!comment.getAuthorId().equals(authorId)) {
             throw new UnauthorizedActionException("You are not the author of this comment");
         }
 
@@ -108,5 +131,22 @@ public class UserService {
         user.getComments().remove(comment);
         appUserRepo.save(user);
     }
+
+    // helper to resolve current author id (authenticated username or anonymous id)
+    private String resolveAuthorId(HttpServletRequest request, HttpServletResponse response) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null &&
+                authentication.isAuthenticated() &&
+                !"anonymousUser".equals(authentication.getPrincipal())) {
+            String name = authentication.getName();
+            System.out.println("Authenticated user: " + name);
+            return name;
+        } else {
+            String anon = anonymousIdService.getOrCreateAnonymousId(request, response);
+            System.out.println("Anonymous user: " + anon);
+            return anon;
+        }
+    }
+
 
 }

@@ -81,6 +81,4 @@ public class GlobalExceptionHandler {
                 .body(new ErrorDTO("Unauthorized-action", exception.getMessage()));
     }
 
-
-
 }

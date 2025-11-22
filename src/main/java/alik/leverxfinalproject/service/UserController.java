@@ -7,6 +7,7 @@ import alik.leverxfinalproject.model.CommentDTO;
 import alik.leverxfinalproject.model.CommentRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +49,7 @@ public class UserController {
     }
 
     @PostMapping("/{id}/comments")
-    public ResponseEntity<Void> addComment(@PathVariable Long id, @RequestBody CommentRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+    public ResponseEntity<Void> addComment(@PathVariable Long id, @RequestBody @Valid CommentRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         userService.addComment(id, request, httpRequest, httpResponse);
         return ResponseEntity.ok().build();
     }
@@ -66,8 +67,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}/comments/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long userId, @PathVariable Long commentId, HttpServletRequest request) {
-        userService.deleteComment(commentId, userId, request);
+    public ResponseEntity<Void> deleteComment(@PathVariable Long userId, @PathVariable Long commentId, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        userService.deleteComment(commentId, userId, httpRequest, httpResponse);
         return ResponseEntity.ok().build();
     }
 
