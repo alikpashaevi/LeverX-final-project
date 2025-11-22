@@ -8,6 +8,7 @@ import alik.leverxfinalproject.error.UnauthorizedActionException;
 import alik.leverxfinalproject.error.UserNotFoundException;
 import alik.leverxfinalproject.model.CommentDTO;
 import alik.leverxfinalproject.model.CommentRequest;
+import alik.leverxfinalproject.model.UserCommentRequest;
 import alik.leverxfinalproject.model.UserDTO;
 import alik.leverxfinalproject.repo.AppUserRepo;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,7 +50,6 @@ public class UserService {
     }
 
     public Page<AppUser> getUnverifiedUsers(int page, int size) {
-
         return appUserRepo.findUnverifiedUsers(PageRequest.of(page, size));
     }
 
@@ -157,5 +157,28 @@ public class UserService {
         }
     }
 
+    public void createUserByComment(UserCommentRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        AppUser user = new AppUser();
+        String authorId = resolveAuthorId(httpRequest, httpResponse);
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setEmail(request.getEmail());
+        Comment comment = new Comment();
+        comment.setAppUser(user);
+        comment.setText(request.getComment());
+        comment.setRating(request.getRating());
+        comment.setAuthorId(authorId);
+        user.getComments().add(comment);
+
+        appUserRepo.save(user);
+    }
+
+    public Page<UserDTO> getTopSellers(int page, int size) {
+        return appUserRepo.findTopSellers(PageRequest.of(page, size));
+    }
+
+    public Page<UserDTO> getUsersByGamesAndRatings(long gameId, double minRating, double maxRating, int page, int size) {
+        return appUserRepo.findUsersByGameAndRatingRange(gameId, minRating, maxRating, PageRequest.of(page, size));
+    }
 
 }

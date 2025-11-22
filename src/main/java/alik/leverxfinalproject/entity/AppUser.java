@@ -26,10 +26,10 @@ public class AppUser {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = true          )
     private String email;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)

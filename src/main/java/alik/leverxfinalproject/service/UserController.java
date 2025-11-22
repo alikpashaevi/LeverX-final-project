@@ -5,6 +5,7 @@ import alik.leverxfinalproject.entity.AppUser;
 import alik.leverxfinalproject.entity.Comment;
 import alik.leverxfinalproject.model.CommentDTO;
 import alik.leverxfinalproject.model.CommentRequest;
+import alik.leverxfinalproject.model.UserCommentRequest;
 import alik.leverxfinalproject.model.UserDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,15 +33,30 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
+    @GetMapping("/profile")
     public Page<UserDTO> getUsers(@RequestParam(defaultValue = "0") int page,
                                   @RequestParam(defaultValue = "10") int size) {
         return userService.getAllUsers(page, size);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/profile/{id}")
     public UserDTO getUserById(@PathVariable Long id) {
         return userService.getUserDTO(id);
+    }
+
+    @GetMapping("/profile/top_sellers")
+    public Page<UserDTO> getTopSellers(@RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "10") int size) {
+        return userService.getTopSellers(page, size);
+    }
+
+    @GetMapping("/profile/get_seller_by_game_and_rating")
+    public Page<UserDTO> getSellersByGameAndRating(@RequestParam long gameId,
+                                                   @RequestParam double minRating,
+                                                   @RequestParam double maxRating,
+                                                   @RequestParam int page,
+                                                   @RequestParam int size) {
+        return userService.getUsersByGamesAndRatings(gameId, minRating, maxRating, page, size);
     }
 
     @PreAuthorize(ADMIN)
@@ -111,6 +127,11 @@ public class UserController {
         return userService.getUnapprovedComment(commentId);
     }
 
+    @PostMapping("/create_seller")
+    public ResponseEntity<Void> createSellerAccount(@RequestBody @Valid UserCommentRequest userCommentRequest, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        userService.createUserByComment(userCommentRequest, httpRequest, httpResponse);
+        return ResponseEntity.ok().build();
+    }
 
 
 }

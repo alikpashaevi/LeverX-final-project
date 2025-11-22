@@ -134,6 +134,48 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
 """)
     Page<UserDTO> findAllUsersWithRatings(Pageable pageable);
 
+    @Query("""
+    SELECT new alik.leverxfinalproject.model.UserDTO(
+        u.id,
+        u.firstName,
+        u.lastName,
+        u.email,
+        AVG(c.rating),
+        COUNT(c)
+    )
+    FROM AppUser u
+    LEFT JOIN u.comments c
+    GROUP BY u.id, u.firstName, u.lastName, u.email
+    HAVING COUNT(c) > 0
+    ORDER BY COALESCE(AVG(c.rating), 0) DESC, COUNT(c) DESC
+    """)
+    Page<UserDTO> findTopSellers(Pageable pageable);
+
+    @Query("""
+        SELECT new alik.leverxfinalproject.model.UserDTO(
+            u.id,
+            u.firstName,
+            u.lastName,
+            u.email,
+            AVG(c.rating),
+            COUNT(c)
+        )
+        FROM AppUser u
+        LEFT JOIN u.comments c
+        LEFT JOIN u.gameObjects gObj
+        LEFT JOIN gObj.game g
+        WHERE (:gameId IS NULL OR g.id = :gameId)
+        GROUP BY u.id, u.firstName, u.lastName, u.email
+        HAVING COALESCE(AVG(c.rating), 0) BETWEEN :minRating AND :maxRating
+        ORDER BY COALESCE(AVG(c.rating), 0) DESC, COUNT(c) DESC
+    """)
+    Page<UserDTO> findUsersByGameAndRatingRange(
+            @Param("gameId") Long gameId,
+            @Param("minRating") double minRating,
+            @Param("maxRating") double maxRating,
+            Pageable pageable
+    );
+
 //    Page<CommentDTO> findCommentsById(Long userId, Pageable pageable);
 //
 //    CommentDTO findCommentById(Long id);
