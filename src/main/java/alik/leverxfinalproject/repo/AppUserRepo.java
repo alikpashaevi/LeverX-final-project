@@ -3,6 +3,7 @@ package alik.leverxfinalproject.repo;
 import alik.leverxfinalproject.entity.AppUser;
 import alik.leverxfinalproject.entity.Comment;
 import alik.leverxfinalproject.model.CommentDTO;
+import alik.leverxfinalproject.model.UserDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -101,6 +102,37 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
     @Query("SELECT c FROM Comment c WHERE c.authorId = :authorId AND c.appUser.id = :userId")
     Comment findCommentByAuthorIdAndAppUserId(@Param("userId") Long userId,
                                               @Param("authorId") String authorId);
+
+    @Query("""
+    SELECT new alik.leverxfinalproject.model.UserDTO(
+        u.id,
+        u.firstName,
+        u.lastName,
+        u.email,
+        AVG(c.rating),
+        COUNT(c)
+    )
+    FROM AppUser u
+    LEFT JOIN u.comments c
+    WHERE u.id = :id
+    GROUP BY u.id, u.firstName, u.lastName, u.email
+""")
+    UserDTO findUserWithRating(@Param("id") long id);
+
+    @Query("""
+    SELECT new alik.leverxfinalproject.model.UserDTO(
+        u.id,
+        u.firstName,
+        u.lastName,
+        u.email,
+        AVG(c.rating),
+        COUNT(c)
+    )
+    FROM AppUser u
+    LEFT JOIN u.comments c
+    GROUP BY u.id, u.firstName, u.lastName, u.email
+""")
+    Page<UserDTO> findAllUsersWithRatings(Pageable pageable);
 
 //    Page<CommentDTO> findCommentsById(Long userId, Pageable pageable);
 //

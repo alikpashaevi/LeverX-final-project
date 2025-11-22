@@ -8,11 +8,13 @@ import alik.leverxfinalproject.error.UnauthorizedActionException;
 import alik.leverxfinalproject.error.UserNotFoundException;
 import alik.leverxfinalproject.model.CommentDTO;
 import alik.leverxfinalproject.model.CommentRequest;
+import alik.leverxfinalproject.model.UserDTO;
 import alik.leverxfinalproject.repo.AppUserRepo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,14 @@ public class UserService {
 
     public AppUser getUser(long id) {
         return appUserRepo.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+    }
+
+    public UserDTO getUserDTO(long id) {
+        return appUserRepo.findUserWithRating(id);
+    }
+
+    public Page<UserDTO> getAllUsers(int page, int size) {
+        return appUserRepo.findAllUsersWithRatings(PageRequest.of(page, size));
     }
 
     public AppUser getUserByEmail(String email) {
@@ -61,7 +71,7 @@ public class UserService {
             System.out.println("Authenticated user: " + authorId);
         } else {
             authorId = anonymousIdService.getOrCreateAnonymousId(httpRequest, httpResponse);
-                    }
+        }
 
         if (appUserRepo.authorHasCommented(userId, authorId)) {
             comment = appUserRepo.findCommentByAuthorIdAndAppUserId(userId, authorId);
@@ -132,7 +142,6 @@ public class UserService {
         appUserRepo.save(user);
     }
 
-    // helper to resolve current author id (authenticated username or anonymous id)
     private String resolveAuthorId(HttpServletRequest request, HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null &&
