@@ -17,9 +17,8 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
     boolean existsByEmail(String email);
     AppUser findByEmail(String email);
 
-
-    @Query("SELECT u FROM AppUser u WHERE u.isVerified = false")
-    Page<AppUser> findUnverifiedUsers(Pageable pageable);
+    @Query("Select u FROM AppUser u WHERE u.id = :id AND u.isVerified = false")
+    AppUser findUnverifiedUserEntityById(@Param("id") long id);
 
     @Query("""
     SELECT new alik.leverxfinalproject.model.dto.CommentDTO(
@@ -106,29 +105,69 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
                                               @Param("authorId") String authorId);
 
     @Query("""
-    SELECT new alik.leverxfinalproject.model.UserDTO(
+    SELECT new alik.leverxfinalproject.model.dto.UserDTO(
         u.id,
         u.firstName,
         u.lastName,
         u.email,
         AVG(c.rating),
-        COUNT(c)
+        COUNT(c),
+        u.createdAt
     )
     FROM AppUser u
     LEFT JOIN u.comments c
     WHERE u.id = :id
     GROUP BY u.id, u.firstName, u.lastName, u.email
 """)
-    UserDTO findUserWithRating(@Param("id") long id);
+    UserDTO findUserDTO(@Param("id") long id);
 
     @Query("""
-    SELECT new alik.leverxfinalproject.model.UserDTO(
+    SELECT new alik.leverxfinalproject.model.dto.UserDTO(
         u.id,
         u.firstName,
         u.lastName,
         u.email,
         AVG(c.rating),
-        COUNT(c)
+        COUNT(c),
+        u.createdAt
+    )
+    FROM AppUser u
+    LEFT JOIN u.comments c
+    WHERE u.isVerified = false
+    AND u.isEmailVerified = true
+    GROUP BY u.id, u.firstName, u.lastName, u.email
+""")
+    Page<UserDTO> getUnverifiedUsers( Pageable pageable);
+
+
+    @Query("""
+    SELECT new alik.leverxfinalproject.model.dto.UserDTO(
+        u.id,
+        u.firstName,
+        u.lastName,
+        u.email,
+        AVG(c.rating),
+        COUNT(c),
+        u.createdAt
+    )
+    FROM AppUser u
+    LEFT JOIN u.comments c
+    WHERE u.isVerified = false
+    AND u.id = :id
+    AND u.isEmailVerified = true
+    GROUP BY u.id, u.firstName, u.lastName, u.email
+""")
+    UserDTO getUnverifiedUserById(@Param("id") long id);
+
+    @Query("""
+    SELECT new alik.leverxfinalproject.model.dto.UserDTO(
+        u.id,
+        u.firstName,
+        u.lastName,
+        u.email,
+        AVG(c.rating),
+        COUNT(c),
+        u.createdAt
     )
     FROM AppUser u
     LEFT JOIN u.comments c
@@ -137,13 +176,14 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
     Page<UserDTO> findAllUsersWithRatings(Pageable pageable);
 
     @Query("""
-    SELECT new alik.leverxfinalproject.model.UserDTO(
+    SELECT new alik.leverxfinalproject.model.dto.UserDTO(
         u.id,
         u.firstName,
         u.lastName,
         u.email,
         AVG(c.rating),
-        COUNT(c)
+        COUNT(c),
+        u.createdAt
     )
     FROM AppUser u
     LEFT JOIN u.comments c
@@ -154,13 +194,14 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
     Page<UserDTO> findTopSellers(Pageable pageable);
 
     @Query("""
-        SELECT new alik.leverxfinalproject.model.UserDTO(
+        SELECT new alik.leverxfinalproject.model.dto.UserDTO(
             u.id,
             u.firstName,
             u.lastName,
             u.email,
             AVG(c.rating),
-            COUNT(c)
+            COUNT(c),
+            u.createdAt
         )
         FROM AppUser u
         LEFT JOIN u.comments c

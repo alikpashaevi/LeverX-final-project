@@ -56,7 +56,7 @@ public class UserController {
 
     @PreAuthorize(ADMIN)
     @GetMapping("/unverified")
-    public Page<AppUser> getUnverifiedUsers(@RequestParam(defaultValue = "0") int page,
+    public Page<UserDTO> getUnverifiedUsers(@RequestParam(defaultValue = "0") int page,
                                             @RequestParam(defaultValue = "10") int size) {
         System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
 
@@ -64,10 +64,15 @@ public class UserController {
     }
 
     @PreAuthorize(ADMIN)
+    @GetMapping("/unverified/{id}")
+    public UserDTO getUnverifiedUserById(@PathVariable long id) {
+        return userService.getUnverifiedUser(id);
+    }
+
+    @PreAuthorize(ADMIN)
     @PutMapping("/verify")
-    public ResponseEntity<Void> verifyUser(@RequestParam String email) {
-        AppUser user = userService.getUserByEmail(email);
-        userService.verifyUser(user);
+    public ResponseEntity<Void> verifyUser(@RequestParam long id) {
+        userService.verifyUser(id);
         return ResponseEntity.ok().build();
     }
 

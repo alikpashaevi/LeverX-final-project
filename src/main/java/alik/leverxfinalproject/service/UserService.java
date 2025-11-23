@@ -38,7 +38,7 @@ public class UserService {
     }
 
     public UserDTO getUserDTO(long id) {
-        return appUserRepo.findUserWithRating(id);
+        return appUserRepo.findUserDTO(id);
     }
 
     public Page<UserDTO> getAllUsers(int page, int size) {
@@ -49,11 +49,30 @@ public class UserService {
         return appUserRepo.getAppUserByEmail(email);
     }
 
-    public Page<AppUser> getUnverifiedUsers(int page, int size) {
-        return appUserRepo.findUnverifiedUsers(PageRequest.of(page, size));
+    public Page<UserDTO> getUnverifiedUsers(int page, int size) {
+        return appUserRepo.getUnverifiedUsers(PageRequest.of(page, size));
     }
 
-    public void verifyUser(AppUser user) {
+    public AppUser getUnverifiedUserEntity(long id) {
+        AppUser userToReturn = appUserRepo.findUnverifiedUserEntityById(id);
+        if (userToReturn == null) {
+            throw new UserNotFoundException("User not found or already verified");
+        }
+
+        return userToReturn;
+    }
+
+    public UserDTO getUnverifiedUser(long id) {
+        UserDTO userToReturn = appUserRepo.getUnverifiedUserById(id);
+        if (userToReturn == null) {
+            throw new UserNotFoundException("User not found or already verified");
+        }
+
+        return userToReturn;
+    }
+
+    public void verifyUser(long id) {
+        AppUser user = getUnverifiedUserEntity(id);
         user.setVerified(true);
         appUserRepo.save(user);
     }
@@ -112,7 +131,6 @@ public class UserService {
 
     public void deleteComment(Long commentId, Long userId, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         AppUser user = getUser(userId);
-        // TODO: check if the comment exists
         Comment comment = getCommentEntity(commentId, userId);
 
         String authorId = resolveAuthorId(httpRequest, httpResponse);
@@ -146,9 +164,18 @@ public class UserService {
     }
 
     public void approveComment(Long commentId, Long userId) {
-        Comment comment = appUserRepo.findCommentEntityById(commentId, userId);
+        Comment comment = getUnapprovedCommentEntity(commentId, userId);
         comment.setIsApproved(true);
         appUserRepo.save(getUser(userId));
+    }
+
+    public Comment getUnapprovedCommentEntity(Long commentId, Long userId) {
+        Comment commentToReturn = appUserRepo.findCommentEntityById(commentId, userId);
+        if (commentToReturn == null || commentToReturn.getIsApproved()) {
+            throw new CommentNotFoundException("Comment not found or already approved");
+        }
+
+        return commentToReturn;
     }
 
     public CommentDTO getUnapprovedComment(Long commentId) {
@@ -162,7 +189,7 @@ public class UserService {
 
     public void rejectComment(Long commentId, Long userId) {
         AppUser user = getUser(userId);
-        Comment comment = appUserRepo.findCommentEntityById(commentId, userId);
+        Comment comment = getUnapprovedCommentEntity(commentId, userId);
 
         user.getComments().remove(comment);
         appUserRepo.save(user);

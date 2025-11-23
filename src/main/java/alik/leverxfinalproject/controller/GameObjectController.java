@@ -41,8 +41,8 @@ public class GameObjectController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> editGameObject(@PathVariable long id, @RequestBody @Valid GameObjectRequest request) {
-        gameObjectService.editGameObject(id, request);
+    public ResponseEntity<Void> updateGameObject(@PathVariable long id, @RequestBody @Valid GameObjectRequest request) {
+        gameObjectService.updateGameObject(id, request);
         return ResponseEntity.ok().build();
     }
 

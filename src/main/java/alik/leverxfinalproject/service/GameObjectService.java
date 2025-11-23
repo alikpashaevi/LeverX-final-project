@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class GameObjectService {
 
@@ -30,6 +32,10 @@ public class GameObjectService {
     public GameObjectDTO getGameObjectById(long id) {
         GameObject gameObject = gameObjectRepo.findById(id).orElseThrow(() -> new GameObjectNotFoundException("GameObject not found"));
         return MapObjects.mapToDTO(gameObject);
+    }
+
+    public GameObject getGameObjectEntity(long id) {
+        return gameObjectRepo.findById(id).orElseThrow(() -> new GameObjectNotFoundException("GameObject not found"));
     }
 
     public void addGameObject(GameObjectRequest request) {
@@ -52,8 +58,8 @@ public class GameObjectService {
         return gameObjectRepo.findGameObjects(PageRequest.of(page, size));
     }
 
-    public void editGameObject(long id, GameObjectRequest request) {
-        GameObject gameObject = gameObjectRepo.findById(id).orElseThrow(() -> new GameObjectNotFoundException("GameObject not found"));
+    public void updateGameObject(long id, GameObjectRequest request) {
+        GameObject gameObject = getGameObjectEntity(id);
 
         long userId = GetUserIdFromToken.getUserIdFromToken();
 
@@ -63,7 +69,8 @@ public class GameObjectService {
 
         gameObject.setTitle(request.getName());
         gameObject.setText(request.getText());
-
+        gameObject.setGame(gameService.getGame(request.getGameId()));
+        gameObject.setUpdatedAt(LocalDateTime.now());
         gameObjectRepo.save(gameObject);
     }
 
