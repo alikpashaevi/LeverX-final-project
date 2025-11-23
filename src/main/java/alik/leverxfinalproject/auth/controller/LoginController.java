@@ -1,6 +1,8 @@
-package alik.leverxfinalproject.auth;
+package alik.leverxfinalproject.auth.controller;
 
 import alik.leverxfinalproject.auth.model.LoginRequest;
+import alik.leverxfinalproject.auth.service.JwtService;
+import alik.leverxfinalproject.auth.service.LoginService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

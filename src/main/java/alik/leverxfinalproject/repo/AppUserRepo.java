@@ -55,7 +55,7 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
 """)
     CommentDTO findCommentById(@Param("id") Long id, @Param("userId") Long userId);
 
-    @Query("SELECT c FROM Comment c WHERE c.id = :id AND c.appUser.id = c.appUser.id")
+    @Query("SELECT c FROM Comment c WHERE c.id = :id AND c.appUser.id = c.appUser.id AND c.isApproved = true")
     Comment findCommentEntityById(@Param("id") Long id, @Param("userId") Long userId);
 
     @Query("""
@@ -100,7 +100,7 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
     boolean authorHasCommented(@Param("userId") Long userId,
                                @Param("authorId") String authorId);
 
-    @Query("SELECT c FROM Comment c WHERE c.authorId = :authorId AND c.appUser.id = :userId")
+    @Query("SELECT c FROM Comment c WHERE c.authorId = :authorId AND c.appUser.id = :userId AND c.isApproved = true")
     Comment findCommentByAuthorIdAndAppUserId(@Param("userId") Long userId,
                                               @Param("authorId") String authorId);
 
@@ -187,6 +187,7 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
     )
     FROM AppUser u
     LEFT JOIN u.comments c
+    WHERE u.isVerified = true
     GROUP BY u.id, u.firstName, u.lastName, u.email
     HAVING COUNT(c) > 0
     ORDER BY COALESCE(AVG(c.rating), 0) DESC, COUNT(c) DESC
@@ -208,6 +209,7 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
         LEFT JOIN u.gameObjects gObj
         LEFT JOIN gObj.game g
         WHERE (:gameId IS NULL OR g.id = :gameId)
+        AND u.isVerified = true
         GROUP BY u.id, u.firstName, u.lastName, u.email
         HAVING COALESCE(AVG(c.rating), 0) BETWEEN :minRating AND :maxRating
         ORDER BY COALESCE(AVG(c.rating), 0) DESC, COUNT(c) DESC

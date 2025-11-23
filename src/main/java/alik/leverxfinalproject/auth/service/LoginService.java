@@ -1,4 +1,4 @@
-package alik.leverxfinalproject.auth;
+package alik.leverxfinalproject.auth.service;
 
 import alik.leverxfinalproject.auth.model.LoginRequest;
 import alik.leverxfinalproject.error.InvalidLoginException;

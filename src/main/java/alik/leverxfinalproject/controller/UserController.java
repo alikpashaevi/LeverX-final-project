@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -79,7 +80,7 @@ public class UserController {
     @PostMapping("/{id}/comments")
     public ResponseEntity<Void> addComment(@PathVariable Long id, @RequestBody @Valid CommentRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         userService.addComment(id, request, httpRequest, httpResponse);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{id}/comments")
@@ -114,7 +115,7 @@ public class UserController {
     }
 
     @PreAuthorize(ADMIN)
-    @PutMapping("/unapproved_comments/approve/{userId}/comment/{commentId}")
+    @PostMapping("/unapproved_comments/approve/{userId}/comment/{commentId}")
     public ResponseEntity<Void> approveComment(@PathVariable Long userId, @PathVariable Long commentId) {
         userService.approveComment(commentId, userId);
         return ResponseEntity.ok().build();

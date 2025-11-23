@@ -1,4 +1,4 @@
-package alik.leverxfinalproject.auth;
+package alik.leverxfinalproject.auth.service;
 
 import alik.leverxfinalproject.entity.AppUser;
 import alik.leverxfinalproject.entity.Role;

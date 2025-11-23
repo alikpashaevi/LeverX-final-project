@@ -1,7 +1,9 @@
-package alik.leverxfinalproject.auth;
+package alik.leverxfinalproject.auth.controller;
 
 import alik.leverxfinalproject.auth.model.RegisterRequest;
+import alik.leverxfinalproject.auth.service.RegisterService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +20,7 @@ public class RegisterController {
     @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody @Valid RegisterRequest registerRequest) {
         registerService.register(registerRequest);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/resend_confirmation")
