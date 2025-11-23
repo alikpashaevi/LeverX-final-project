@@ -18,6 +18,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 //@RequiredArgsConstructor
 public class UserService {
@@ -99,10 +101,19 @@ public class UserService {
         return commentToReturn;
     }
 
+    public Comment getCommentEntity(Long commentId, Long userId) {
+        Comment commentToReturn = appUserRepo.findCommentEntityById(commentId, userId);
+        if (commentToReturn == null) {
+            throw new CommentNotFoundException("Comment not found");
+        }
+
+        return commentToReturn;
+    }
+
     public void deleteComment(Long commentId, Long userId, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         AppUser user = getUser(userId);
         // TODO: check if the comment exists
-        Comment comment = appUserRepo.findCommentEntityById(commentId, userId);
+        Comment comment = getCommentEntity(commentId, userId);
 
         String authorId = resolveAuthorId(httpRequest, httpResponse);
 
@@ -112,6 +123,22 @@ public class UserService {
 
         user.getComments().remove(comment);
         appUserRepo.save(user);
+    }
+
+    public void updateComment(Long commentId, Long userId, CommentRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        AppUser user = getUser(userId);
+        Comment comment = getCommentEntity(commentId, userId);
+        String authorId = resolveAuthorId(httpRequest, httpResponse);
+
+        if (!comment.getAuthorId().equals(authorId)) {
+            throw new UnauthorizedActionException("You are not the author of this comment");
+        }
+
+        comment.setText(request.getText());
+        comment.setRating(request.getRating());
+        comment.setUpdatedAt(LocalDateTime.now());
+        appUserRepo.save(user);
+
     }
 
     public Page<CommentDTO> getUnapprovedComments(int page, int size) {

@@ -95,6 +95,12 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/{userId}/comments/{commentId}")
+    public ResponseEntity<Void> editComment(@PathVariable Long userId, @PathVariable Long commentId, @RequestBody @Valid CommentRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        userService.updateComment(commentId, userId, request, httpRequest, httpResponse);
+        return ResponseEntity.ok().build();
+    }
+
     @PreAuthorize(ADMIN)
     @GetMapping("/unapproved_comments")
     public Page<CommentDTO> getUnapprovedComments(@RequestParam(defaultValue = "0") int page,
