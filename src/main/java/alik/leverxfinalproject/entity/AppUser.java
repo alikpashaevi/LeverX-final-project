@@ -128,4 +128,6 @@ public class AppUser {
         return createdAt;
     }
 
+    public void setId(long l) {
+    }
 }
