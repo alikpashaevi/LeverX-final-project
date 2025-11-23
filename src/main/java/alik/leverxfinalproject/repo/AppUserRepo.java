@@ -2,16 +2,14 @@ package alik.leverxfinalproject.repo;
 
 import alik.leverxfinalproject.entity.AppUser;
 import alik.leverxfinalproject.entity.Comment;
-import alik.leverxfinalproject.model.CommentDTO;
-import alik.leverxfinalproject.model.UserDTO;
+import alik.leverxfinalproject.model.dto.CommentDTO;
+import alik.leverxfinalproject.model.dto.UserDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface AppUserRepo extends JpaRepository<AppUser, Long> {
@@ -24,13 +22,14 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
     Page<AppUser> findUnverifiedUsers(Pageable pageable);
 
     @Query("""
-    SELECT new alik.leverxfinalproject.model.CommentDTO(
+    SELECT new alik.leverxfinalproject.model.dto.CommentDTO(
         c.id,
         c.text,
         c.rating,
         c.appUser.id,
         c.authorId,
         c.createdAt,
+        c.updatedAt,
         c.isApproved
     )
     FROM Comment c
@@ -40,13 +39,14 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
     Page<CommentDTO> findCommentsByUserId(@Param("userId") Long userId, Pageable pageable);
 
     @Query("""
-        SELECT new alik.leverxfinalproject.model.CommentDTO(
+        SELECT new alik.leverxfinalproject.model.dto.CommentDTO(
         c.id,
         c.text,
         c.rating,
         c.appUser.id,
         c.authorId,
         c.createdAt,
+        c.updatedAt,
         c.isApproved
     )
     FROM Comment c
@@ -60,13 +60,14 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
     Comment findCommentEntityById(@Param("id") Long id, @Param("userId") Long userId);
 
     @Query("""
-        SELECT new alik.leverxfinalproject.model.CommentDTO(
+        SELECT new alik.leverxfinalproject.model.dto.CommentDTO(
         c.id,
         c.text,
         c.rating,
         c.appUser.id,
         c.authorId,
         c.createdAt,
+        c.updatedAt,
         c.isApproved
     )
     FROM Comment c
@@ -75,13 +76,14 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
     Page<CommentDTO> findUnapprovedComments(Pageable pageable);
 
     @Query("""
-        SELECT new alik.leverxfinalproject.model.CommentDTO(
+        SELECT new alik.leverxfinalproject.model.dto.CommentDTO(
         c.id,
         c.text,
         c.rating,
         c.appUser.id,
         c.authorId,
         c.createdAt,
+        c.updatedAt,
         c.isApproved
     )
     FROM Comment c

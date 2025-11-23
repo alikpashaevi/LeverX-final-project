@@ -1,4 +1,6 @@
-package alik.leverxfinalproject.model;
+package alik.leverxfinalproject.model.dto;
+
+import java.time.LocalDateTime;
 
 public class GameObjectDTO {
     private Long id;
@@ -6,13 +8,17 @@ public class GameObjectDTO {
     private String text;
     private Long gameId;
     private Long userId;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    public GameObjectDTO(Long id, String title, String text, Long gameId, Long userId) {
+    public GameObjectDTO(Long id, String title, String text, Long gameId, Long userId, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.title = title;
         this.text = text;
         this.gameId = gameId;
         this.userId = userId;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public GameObjectDTO() {
@@ -56,5 +62,21 @@ public class GameObjectDTO {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

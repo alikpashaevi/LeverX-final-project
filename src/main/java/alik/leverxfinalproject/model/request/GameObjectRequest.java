@@ -1,4 +1,4 @@
-package alik.leverxfinalproject.model;
+package alik.leverxfinalproject.model.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
@@ -8,7 +8,6 @@ public class GameObjectRequest {
     private String name;
     @NotBlank
     private String text;
-    @NotBlank
     @Positive
     private Long gameId;
 

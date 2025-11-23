@@ -9,7 +9,6 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -39,5 +38,21 @@ public class JwtService {
             // TODO: replace with custom exception
             throw new RuntimeException("Failed to generate token");
         }
+    }
+
+    //@Data
+    //@AllArgsConstructor
+    public static class LoginResponse {
+        private String accessToken;
+
+        public LoginResponse(String accessToken) {
+            this.accessToken = accessToken;
+        }
+
+        public String getAccessToken() {
+            return accessToken;
+        }
+
+
     }
 }

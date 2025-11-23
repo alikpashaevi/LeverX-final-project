@@ -1,19 +1,21 @@
-package alik.leverxfinalproject.auth;
+package alik.leverxfinalproject.model.request;
 
+import jakarta.validation.constraints.*;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-
-public class RegisterRequest {
+public class UserCommentRequest {
     @NotBlank
     private String firstName;
     @NotBlank
     private String lastName;
-    @NotBlank
     @Email
+    @Null
     private String email;
     @NotBlank
-    private String password;
+    private String comment;
+    @Min(1)
+    @Max(5)
+    private int rating;
+
 
     public String getFirstName() {
         return firstName;
@@ -27,7 +29,11 @@ public class RegisterRequest {
         return email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getComment() {
+        return comment;
+    }
+
+    public int getRating() {
+        return rating;
     }
 }

@@ -1,8 +1,7 @@
-package alik.leverxfinalproject.auth;
+package alik.leverxfinalproject.auth.model;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
 
 //@Data
 public class LoginRequest {

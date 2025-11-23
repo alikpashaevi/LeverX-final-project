@@ -1,14 +1,11 @@
 package alik.leverxfinalproject.service;
 
 import alik.leverxfinalproject.entity.Game;
-import alik.leverxfinalproject.model.GameObjectRequest;
-import alik.leverxfinalproject.model.GameRequest;
+import alik.leverxfinalproject.model.request.GameRequest;
 import alik.leverxfinalproject.repo.GameRepo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class GameService {

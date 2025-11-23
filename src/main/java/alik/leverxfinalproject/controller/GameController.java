@@ -1,7 +1,7 @@
 package alik.leverxfinalproject.controller;
 
 import alik.leverxfinalproject.entity.Game;
-import alik.leverxfinalproject.model.GameRequest;
+import alik.leverxfinalproject.model.request.GameRequest;
 import alik.leverxfinalproject.service.GameService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;

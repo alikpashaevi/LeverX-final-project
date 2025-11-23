@@ -1,8 +1,7 @@
 package alik.leverxfinalproject.controller;
 
-import alik.leverxfinalproject.entity.GameObject;
-import alik.leverxfinalproject.model.GameObjectDTO;
-import alik.leverxfinalproject.model.GameObjectRequest;
+import alik.leverxfinalproject.model.dto.GameObjectDTO;
+import alik.leverxfinalproject.model.request.GameObjectRequest;
 import alik.leverxfinalproject.service.GameObjectService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;

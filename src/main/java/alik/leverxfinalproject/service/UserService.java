@@ -1,21 +1,19 @@
 package alik.leverxfinalproject.service;
 
-import alik.leverxfinalproject.components.GetUserIdFromToken;
 import alik.leverxfinalproject.entity.AppUser;
 import alik.leverxfinalproject.entity.Comment;
 import alik.leverxfinalproject.error.CommentNotFoundException;
 import alik.leverxfinalproject.error.UnauthorizedActionException;
 import alik.leverxfinalproject.error.UserNotFoundException;
-import alik.leverxfinalproject.model.CommentDTO;
-import alik.leverxfinalproject.model.CommentRequest;
-import alik.leverxfinalproject.model.UserCommentRequest;
-import alik.leverxfinalproject.model.UserDTO;
+import alik.leverxfinalproject.model.dto.CommentDTO;
+import alik.leverxfinalproject.model.request.CommentRequest;
+import alik.leverxfinalproject.model.request.UserCommentRequest;
+import alik.leverxfinalproject.model.dto.UserDTO;
 import alik.leverxfinalproject.repo.AppUserRepo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -82,7 +80,7 @@ public class UserService {
         comment.setText(request.getText());
         comment.setRating(request.getRating());
         comment.setAppUser(user);
-        comment.setAuthorId(anonymousIdService.getOrCreateAnonymousId(httpRequest, httpResponse));
+        comment.setAuthorId(authorId);
 
         user.getComments().add(comment);
         appUserRepo.save(user);
@@ -103,6 +101,7 @@ public class UserService {
 
     public void deleteComment(Long commentId, Long userId, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         AppUser user = getUser(userId);
+        // TODO: check if the comment exists
         Comment comment = appUserRepo.findCommentEntityById(commentId, userId);
 
         String authorId = resolveAuthorId(httpRequest, httpResponse);

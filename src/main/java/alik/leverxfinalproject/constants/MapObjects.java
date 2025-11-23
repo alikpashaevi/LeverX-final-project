@@ -1,7 +1,7 @@
 package alik.leverxfinalproject.constants;
 
 import alik.leverxfinalproject.entity.GameObject;
-import alik.leverxfinalproject.model.GameObjectDTO;
+import alik.leverxfinalproject.model.dto.GameObjectDTO;
 
 public class MapObjects {
     public static GameObjectDTO mapToDTO(GameObject gameObject) {

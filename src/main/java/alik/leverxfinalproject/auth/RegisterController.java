@@ -1,5 +1,6 @@
 package alik.leverxfinalproject.auth;
 
+import alik.leverxfinalproject.auth.model.RegisterRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

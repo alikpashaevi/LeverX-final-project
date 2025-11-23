@@ -1,27 +1,22 @@
-package alik.leverxfinalproject.service;
+package alik.leverxfinalproject.controller;
 
 import alik.leverxfinalproject.entity.AppUser;
 
-import alik.leverxfinalproject.entity.Comment;
-import alik.leverxfinalproject.model.CommentDTO;
-import alik.leverxfinalproject.model.CommentRequest;
-import alik.leverxfinalproject.model.UserCommentRequest;
-import alik.leverxfinalproject.model.UserDTO;
+import alik.leverxfinalproject.model.dto.CommentDTO;
+import alik.leverxfinalproject.model.request.CommentRequest;
+import alik.leverxfinalproject.model.request.UserCommentRequest;
+import alik.leverxfinalproject.model.dto.UserDTO;
+import alik.leverxfinalproject.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-
 import static alik.leverxfinalproject.constants.AuthorizationConstants.ADMIN;
-import static alik.leverxfinalproject.constants.AuthorizationConstants.SELLER_OR_ADMIN;
 
 @RestController
 @RequestMapping("/users")
@@ -127,7 +122,7 @@ public class UserController {
         return userService.getUnapprovedComment(commentId);
     }
 
-    @PostMapping("/create_seller")
+    @PostMapping("/profile/create_seller")
     public ResponseEntity<Void> createSellerAccount(@RequestBody @Valid UserCommentRequest userCommentRequest, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         userService.createUserByComment(userCommentRequest, httpRequest, httpResponse);
         return ResponseEntity.ok().build();

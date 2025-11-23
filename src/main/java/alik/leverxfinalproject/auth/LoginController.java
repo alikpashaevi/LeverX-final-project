@@ -1,7 +1,7 @@
 package alik.leverxfinalproject.auth;
 
+import alik.leverxfinalproject.auth.model.LoginRequest;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +18,7 @@ public class LoginController {
 
 
     @PostMapping
-    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
+    public ResponseEntity<JwtService.LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
         return ResponseEntity.ok(loginService.login(loginRequest));
     }
 

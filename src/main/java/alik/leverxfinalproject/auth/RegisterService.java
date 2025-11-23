@@ -1,5 +1,6 @@
 package alik.leverxfinalproject.auth;
 
+import alik.leverxfinalproject.auth.model.RegisterRequest;
 import alik.leverxfinalproject.error.EmailAlreadyInUseException;
 import alik.leverxfinalproject.error.EmailAlreadyVerifiedException;
 import alik.leverxfinalproject.error.InvalidResetCodeException;

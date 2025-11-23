@@ -1,4 +1,6 @@
-package alik.leverxfinalproject.model;
+package alik.leverxfinalproject.model.dto;
+
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
@@ -9,14 +11,16 @@ public class UserDTO {
     private String email;
     private Double avgRating;
     private Long ratingCount;
+    private LocalDateTime createdAt;
 
-    public UserDTO(long id, String firstName, String lastName, String email, Double avgRating, Long ratingCount) {
+    public UserDTO(long id, String firstName, String lastName, String email, Double avgRating, Long ratingCount, LocalDateTime createdAt) {
         this.id = id;
         FirstName = firstName;
         LastName = lastName;
         this.email = email;
         this.avgRating = avgRating;
         this.ratingCount = ratingCount;
+        this.createdAt = createdAt;
     }
 
     public UserDTO() {
@@ -45,6 +49,10 @@ public class UserDTO {
 
     public Long getRatingCount() {
         return ratingCount;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
 }

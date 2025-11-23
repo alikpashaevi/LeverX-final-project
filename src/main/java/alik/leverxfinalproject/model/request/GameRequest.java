@@ -1,4 +1,4 @@
-package alik.leverxfinalproject.model;
+package alik.leverxfinalproject.model.request;
 
 public class GameRequest {
     private String title;

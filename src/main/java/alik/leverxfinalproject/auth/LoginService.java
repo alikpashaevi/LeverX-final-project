@@ -1,5 +1,6 @@
 package alik.leverxfinalproject.auth;
 
+import alik.leverxfinalproject.auth.model.LoginRequest;
 import alik.leverxfinalproject.error.InvalidLoginException;
 import alik.leverxfinalproject.entity.AppUser;
 import alik.leverxfinalproject.service.UserService;
@@ -20,7 +21,7 @@ public class LoginService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public LoginResponse login(LoginRequest loginRequest) {
+    public JwtService.LoginResponse login(LoginRequest loginRequest) {
         AppUser appUser = userService.getUserByEmail(loginRequest.getEmail());
 
         if (appUser != null && passwordEncoder.matches(loginRequest.getPassword(), appUser.getPassword()) && appUser.isVerified() && appUser.isEmailVerified()) {
