@@ -2,6 +2,7 @@ package alik.leverxfinalproject.service;
 
 import alik.leverxfinalproject.components.GetUserIdFromToken;
 import alik.leverxfinalproject.constants.MapObjects;
+import alik.leverxfinalproject.entity.AppUser;
 import alik.leverxfinalproject.entity.Game;
 import alik.leverxfinalproject.entity.GameObject;
 import alik.leverxfinalproject.error.GameNotFoundException;
@@ -40,16 +41,21 @@ public class GameObjectService {
 
     public void addGameObject(GameObjectRequest request) {
         GameObject gameObject = new GameObject();
+        AppUser appUser = userService.getUser(GetUserIdFromToken.getUserIdFromToken());
 
         gameObject.setTitle(request.getName());
         gameObject.setText(request.getText());
         Game game = gameService.getGame(request.getGameId());
+        if (gameObjectRepo.existsGameObjectByTitleAndAppUserAndGame(gameObject.getTitle(), appUser, game)) {
+            throw new UnauthorizedActionException("You have already created a game object with this title for this game");
+        }
+
         if (game == null) {
             throw new GameNotFoundException("Game not found, please create the game first");
         }
         gameObject.setGame(game);
         System.out.println("User ID from token: " + GetUserIdFromToken.getUserIdFromToken());
-        gameObject.setAppUser(userService.getUser(GetUserIdFromToken.getUserIdFromToken()));
+        gameObject.setAppUser(appUser);
 
         gameObjectRepo.save(gameObject);
     }
@@ -85,5 +91,7 @@ public class GameObjectService {
 
         gameObjectRepo.deleteById(id);
     }
+
+
 
 }
