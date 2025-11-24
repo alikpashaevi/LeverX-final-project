@@ -3,6 +3,7 @@ package alik.leverxfinalproject.service;
 import alik.leverxfinalproject.entity.AppUser;
 import alik.leverxfinalproject.entity.Comment;
 import alik.leverxfinalproject.error.CommentNotFoundException;
+import alik.leverxfinalproject.error.EmailAlreadyInUseException;
 import alik.leverxfinalproject.error.UnauthorizedActionException;
 import alik.leverxfinalproject.error.UserNotFoundException;
 import alik.leverxfinalproject.model.dto.CommentDTO;
@@ -96,8 +97,8 @@ public class UserService {
             throw new UnauthorizedActionException("You cannot comment on your own profile");
         }
 
-        if (appUserRepo.authorHasCommented(userId, authorId)) {
-            comment = appUserRepo.findCommentByAuthorIdAndAppUserId(userId, authorId);
+        if (appUserRepo.authorHasCommented(userId, authorId) && appUserRepo.findCommentByAuthorIdAndAppUserId(userId, authorId) != null) {
+            throw new UnauthorizedActionException("You have already commented on this user. Consider updating your existing comment. If you can't find it, it might be pending approval.");
         } else {
             comment = new Comment();
         }
@@ -125,7 +126,7 @@ public class UserService {
     }
 
     public Comment getCommentEntity(Long commentId, Long userId) {
-        Comment commentToReturn = appUserRepo.findCommentEntityById(commentId, userId);
+        Comment commentToReturn = appUserRepo.findApprovedCommentEntityById(commentId, userId);
         if (commentToReturn == null) {
             throw new CommentNotFoundException("Comment not found");
         }
@@ -159,6 +160,7 @@ public class UserService {
         comment.setText(request.getText());
         comment.setRating(request.getRating());
         comment.setUpdatedAt(LocalDateTime.now());
+        comment.setIsApproved(false);
         appUserRepo.save(user);
 
     }
@@ -174,8 +176,8 @@ public class UserService {
     }
 
     public Comment getUnapprovedCommentEntity(Long commentId, Long userId) {
-        Comment commentToReturn = appUserRepo.findCommentEntityById(commentId, userId);
-        if (commentToReturn == null || commentToReturn.getIsApproved()) {
+        Comment commentToReturn = appUserRepo.findUnapprovedCommentEntityById(commentId, userId);
+        if (commentToReturn == null) {
             throw new CommentNotFoundException("Comment not found or already approved");
         }
 
@@ -215,8 +217,13 @@ public class UserService {
     }
 
     public void createUserByComment(UserCommentRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        if (appUserRepo.existsByEmail(request.getEmail())) {
+            throw new EmailAlreadyInUseException("User with this email already exists");
+        }
+
         AppUser user = new AppUser();
         String authorId = resolveAuthorId(httpRequest, httpResponse);
+
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());

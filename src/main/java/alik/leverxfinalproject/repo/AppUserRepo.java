@@ -56,6 +56,12 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
     CommentDTO findCommentById(@Param("id") Long id, @Param("userId") Long userId);
 
     @Query("SELECT c FROM Comment c WHERE c.id = :id AND c.appUser.id = c.appUser.id AND c.isApproved = true")
+    Comment findApprovedCommentEntityById(@Param("id") Long id, @Param("userId") Long userId);
+
+    @Query("SELECT c FROM Comment c WHERE c.id = :id AND c.appUser.id = c.appUser.id AND c.isApproved = false")
+    Comment findUnapprovedCommentEntityById(@Param("id") Long id, @Param("userId") Long userId);
+
+    @Query("SELECT c FROM Comment c WHERE c.id = :id AND c.appUser.id = c.appUser.id")
     Comment findCommentEntityById(@Param("id") Long id, @Param("userId") Long userId);
 
     @Query("""
@@ -100,7 +106,7 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
     boolean authorHasCommented(@Param("userId") Long userId,
                                @Param("authorId") String authorId);
 
-    @Query("SELECT c FROM Comment c WHERE c.authorId = :authorId AND c.appUser.id = :userId AND c.isApproved = true")
+    @Query("SELECT c FROM Comment c WHERE c.authorId = :authorId AND c.appUser.id = :userId")
     Comment findCommentByAuthorIdAndAppUserId(@Param("userId") Long userId,
                                               @Param("authorId") String authorId);
 

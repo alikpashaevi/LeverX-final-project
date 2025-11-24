@@ -31,12 +31,12 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**", "/users/{id}/comments/**", "/users/profile/**").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((req, res, excep) -> {
-                            res.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                            res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                         })
                         .accessDeniedHandler((req, res, excep) -> {
                             res.sendError(HttpServletResponse.SC_FORBIDDEN);
