@@ -23,7 +23,6 @@ public class RegisterService {
 
     private final AppUserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
-    // TODO: replace it with role service later
     private final RoleRepo roleRepo;
     private final EmailService emailService;
     private final EmailVerificationService emailVerificationService;
