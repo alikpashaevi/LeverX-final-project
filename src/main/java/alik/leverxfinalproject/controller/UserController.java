@@ -59,7 +59,6 @@ public class UserController {
     @GetMapping("/unverified")
     public Page<UserDTO> getUnverifiedUsers(@RequestParam(defaultValue = "0") int page,
                                             @RequestParam(defaultValue = "10") int size) {
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
 
         return userService.getUnverifiedUsers(page, size);
     }

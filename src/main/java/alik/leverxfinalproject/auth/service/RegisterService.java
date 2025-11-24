@@ -87,8 +87,6 @@ public class RegisterService {
 
         int resetCode = (int) (Math.random() * 900000) + 100000;
         String resetCodeStr = String.valueOf(resetCode);
-        System.out.println("Generated reset code: " + resetCodeStr);
-        System.out.println("Sending password reset email to: " + email);
 
         emailVerificationService.savePasswordResetCode(resetCodeStr, email);
         emailService.sendPasswordResetEmail(email, resetCodeStr);

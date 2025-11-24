@@ -19,7 +19,6 @@ public class JwtService {
     private String secretKey;
 
     public LoginResponse generateLoginResponse(AppUser user) {
-        System.out.println(user.getRoles());
         try {
             JWTClaimsSet claims = new JWTClaimsSet.Builder()
                     .subject(user.getId().toString())
@@ -32,10 +31,8 @@ public class JwtService {
             SignedJWT signedJWT = new SignedJWT(header, claims);
             signedJWT.sign(new MACSigner(secretKey.getBytes()));
 
-            System.out.println(signedJWT.getJWTClaimsSet().toString());
             return new LoginResponse(signedJWT.serialize());
         } catch (Exception e) {
-            // TODO: replace with custom exception
             throw new RuntimeException("Failed to generate token");
         }
     }
