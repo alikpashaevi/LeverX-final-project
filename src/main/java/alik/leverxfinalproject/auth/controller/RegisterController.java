@@ -44,7 +44,7 @@ public class RegisterController {
 
     @PostMapping("/reset_password")
     public ResponseEntity<Void> resetPassword(@RequestParam("code") String code,
-                                              @RequestBody ResetPasswordRequest request) {
+                                              @RequestBody @Valid ResetPasswordRequest request) {
         registerService.checkCodeAndResetPassword(code, request);
         return ResponseEntity.ok().build();
     }

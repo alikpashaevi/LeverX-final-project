@@ -1,5 +1,6 @@
 package alik.leverxfinalproject.security;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +33,15 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**", "/users/{id}/comments/**", "/users/profile/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((req, res, excep) -> {
+                            res.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                        })
+                        .accessDeniedHandler((req, res, excep) -> {
+                            res.sendError(HttpServletResponse.SC_FORBIDDEN);
+                        })
+                );
         return http.build();
     }
 

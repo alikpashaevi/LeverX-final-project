@@ -106,6 +106,7 @@ public class RegisterService {
         AppUser user = userRepo.getAppUserByEmail(email);
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepo.save(user);
+        emailVerificationService.deleteResetCode(code);
     }
 
 }
