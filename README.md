@@ -1,6 +1,6 @@
 # LeverX Final Project
 
-This is a Spring Boot application that provides a RESTful API for managing users, games, game objects, and comments. It includes features for user authentication, authorization, and email verification.
+This is a Spring Boot application, final project for leverX course, that provides a RESTful API for managing users, games, game objects, and comments. It includes features for user authentication, authorization, and email verification.
 
 ## Table of Contents
 
