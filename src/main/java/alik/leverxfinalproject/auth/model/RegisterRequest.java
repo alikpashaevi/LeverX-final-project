@@ -3,6 +3,7 @@ package alik.leverxfinalproject.auth.model;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 public class RegisterRequest {
     @NotBlank
@@ -12,7 +13,8 @@ public class RegisterRequest {
     @NotBlank
     @Email
     private String email;
-    @NotBlank
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()-+=.])(?=\\S+$).{8,20}$",
+            message = "Password must contain at least one digit, one lowercase, one uppercase, one special character, and no whitespace. Minimum length is 8 and maximum is 20.")
     private String password;
 
     public String getFirstName() {

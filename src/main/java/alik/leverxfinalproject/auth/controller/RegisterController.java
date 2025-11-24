@@ -1,6 +1,7 @@
 package alik.leverxfinalproject.auth.controller;
 
 import alik.leverxfinalproject.auth.model.RegisterRequest;
+import alik.leverxfinalproject.auth.model.ResetPasswordRequest;
 import alik.leverxfinalproject.auth.service.RegisterService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -43,8 +44,8 @@ public class RegisterController {
 
     @PostMapping("/reset_password")
     public ResponseEntity<Void> resetPassword(@RequestParam("code") String code,
-                                              @RequestBody String newPassword) {
-        registerService.checkCodeAndResetPassword(code, newPassword);
+                                              @RequestBody ResetPasswordRequest request) {
+        registerService.checkCodeAndResetPassword(code, request);
         return ResponseEntity.ok().build();
     }
 

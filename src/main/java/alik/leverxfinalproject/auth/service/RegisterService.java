@@ -1,6 +1,7 @@
 package alik.leverxfinalproject.auth.service;
 
 import alik.leverxfinalproject.auth.model.RegisterRequest;
+import alik.leverxfinalproject.auth.model.ResetPasswordRequest;
 import alik.leverxfinalproject.error.EmailAlreadyInUseException;
 import alik.leverxfinalproject.error.EmailAlreadyVerifiedException;
 import alik.leverxfinalproject.error.InvalidResetCodeException;
@@ -95,7 +96,7 @@ public class RegisterService {
 
     }
 
-    public void checkCodeAndResetPassword(String code, String newPassword) {
+    public void checkCodeAndResetPassword(String code, ResetPasswordRequest request) {
         String email = emailVerificationService.getEmailByResetCode(code);
 
         if (email == null) {
@@ -103,7 +104,7 @@ public class RegisterService {
         }
 
         AppUser user = userRepo.getAppUserByEmail(email);
-        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepo.save(user);
     }
 

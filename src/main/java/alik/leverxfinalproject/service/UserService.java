@@ -92,6 +92,10 @@ public class UserService {
             authorId = anonymousIdService.getOrCreateAnonymousId(httpRequest, httpResponse);
         }
 
+        if (authorId.equals(userId.toString())) {
+            throw new UnauthorizedActionException("You cannot comment on your own profile");
+        }
+
         if (appUserRepo.authorHasCommented(userId, authorId)) {
             comment = appUserRepo.findCommentByAuthorIdAndAppUserId(userId, authorId);
         } else {
@@ -216,6 +220,7 @@ public class UserService {
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
+        user.setEmailVerified(true);
         Comment comment = new Comment();
         comment.setAppUser(user);
         comment.setText(request.getComment());
