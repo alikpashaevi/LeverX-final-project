@@ -50,8 +50,8 @@ public class UserController {
     public Page<UserDTO> getSellersByGameAndRating(@RequestParam long gameId,
                                                    @RequestParam double minRating,
                                                    @RequestParam double maxRating,
-                                                   @RequestParam int page,
-                                                   @RequestParam int size) {
+                                                   @RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam(defaultValue = "10") int size) {
         return userService.getUsersByGamesAndRatings(gameId, minRating, maxRating, page, size);
     }
 
@@ -71,7 +71,7 @@ public class UserController {
     }
 
     @PreAuthorize(ADMIN)
-    @PutMapping("/verify")
+    @PostMapping("/verify")
     public ResponseEntity<Void> verifyUser(@RequestParam long id) {
         userService.verifyUser(id);
         return ResponseEntity.ok().build();

@@ -171,6 +171,7 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
     )
     FROM AppUser u
     LEFT JOIN u.comments c
+    WHERE u.isVerified = true
     GROUP BY u.id, u.firstName, u.lastName, u.email
 """)
     Page<UserDTO> findAllUsersWithRatings(Pageable pageable);
