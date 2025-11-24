@@ -54,7 +54,6 @@ public class GameObjectService {
             throw new GameNotFoundException("Game not found, please create the game first");
         }
         gameObject.setGame(game);
-        System.out.println("User ID from token: " + GetUserIdFromToken.getUserIdFromToken());
         gameObject.setAppUser(appUser);
 
         gameObjectRepo.save(gameObject);

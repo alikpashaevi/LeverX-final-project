@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
-//@RequiredArgsConstructor
 public class UserService {
 
     private final AppUserRepo appUserRepo;
@@ -88,7 +87,6 @@ public class UserService {
                 authentication.isAuthenticated() &&
                 !"anonymousUser".equals(authentication.getPrincipal())) {
             authorId = authentication.getName();
-            System.out.println("Authenticated user: " + authorId);
         } else {
             authorId = anonymousIdService.getOrCreateAnonymousId(httpRequest, httpResponse);
         }
@@ -206,13 +204,9 @@ public class UserService {
         if (authentication != null &&
                 authentication.isAuthenticated() &&
                 !"anonymousUser".equals(authentication.getPrincipal())) {
-            String name = authentication.getName();
-            System.out.println("Authenticated user: " + name);
-            return name;
+            return authentication.getName();
         } else {
-            String anon = anonymousIdService.getOrCreateAnonymousId(request, response);
-            System.out.println("Anonymous user: " + anon);
-            return anon;
+            return anonymousIdService.getOrCreateAnonymousId(request, response);
         }
     }
 

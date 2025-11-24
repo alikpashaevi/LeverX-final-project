@@ -1,6 +1,7 @@
 package alik.leverxfinalproject.auth.service;
 
 import alik.leverxfinalproject.auth.model.LoginRequest;
+import alik.leverxfinalproject.auth.model.LoginResponse;
 import alik.leverxfinalproject.error.InvalidLoginException;
 import alik.leverxfinalproject.entity.AppUser;
 import alik.leverxfinalproject.service.UserService;
@@ -8,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-//@RequiredArgsConstructor
 public class LoginService {
 
     private final UserService userService;
@@ -21,7 +21,7 @@ public class LoginService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public JwtService.LoginResponse login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest) {
         AppUser appUser = userService.getUserByEmail(loginRequest.getEmail());
 
         if (appUser != null && passwordEncoder.matches(loginRequest.getPassword(), appUser.getPassword()) && appUser.isVerified() && appUser.isEmailVerified()) {
